@@ -3,7 +3,8 @@ from playwright.sync_api import sync_playwright
 import os
 import logging
 import datetime
-
+from pages.OrangePage import Orange_Page
+from utils.utils import get_datestamp
 
 @pytest.fixture(scope="session")
 def browser():
@@ -26,8 +27,16 @@ def page(browser, request):
     yield page
     page.close()
 
+@pytest.fixture(scope="function")
+def logged_in_page(page):
+    orange=Orange_Page(page)
+    orange.login("Admin1","admin123")
+    return orange
+
 @pytest.fixture(scope="session")
 def logger():
+
+    time_stamp = get_datestamp()
     os.makedirs("logs", exist_ok=True)
 
     logger = logging.getLogger()
@@ -35,7 +44,7 @@ def logger():
 
     formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
 
-    file_handler = logging.FileHandler("logs/test.log")
+    file_handler = logging.FileHandler(f"logs/test_{time_stamp}.log")
     file_handler.setFormatter(formatter)
 
     console_handler = logging.StreamHandler()
@@ -55,6 +64,10 @@ def pytest_runtest_makereport(item, call):
     if report.when == "call" and report.failed:
         page = item.funcargs.get("page", None)
         if page:
-            os.makedirs("screenshots", exist_ok=True)
+            folder_path=os.path.join("reports", "screenshots")
+            os.makedirs(folder_path, exist_ok=True)
+            test_name = item.name
             timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-            page.screenshot(path=f"screenshots/failure_{timestamp}.png")
+            file_name = f"{test_name}_{report.when}_{timestamp}.png"
+            full_path = os.path.join(folder_path, file_name)
+            page.screenshot(path=full_path)

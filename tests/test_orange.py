@@ -1,26 +1,26 @@
 
+import pytest
 from pages.OrangePage import Orange_Page
 import pytest_check as check
 
+@pytest.mark.smoke
+@pytest.mark.critical
+@pytest.mark.login
+@pytest.mark.ui
+def test_valid_login(logged_in_page,page, logger):
 
-def test_valid_login(page, logger):
-    
-    orange=Orange_Page(page)
-
-    orange.login("Admin", "admin123")
-    
     page.wait_for_timeout(3000)
 
     assert page.url.endswith("/dashboard/index")
 
-    assert orange.is_dashboard_visible()
+    assert logged_in_page.is_dashboard_visible()
 
     # check.is_true("dashboard" in page.url.lower())
     # check.is_true(orangePage.is_dashboard_visible())
     
     logger.info("Valid Login test passed")
 
-
+@pytest.mark.regression
 def test_invalid_login(page,logger):
 
     orange=Orange_Page(page)
@@ -35,6 +35,7 @@ def test_invalid_login(page,logger):
 
     logger.info("Invalid Login test passed")
 
+@pytest.mark.regression
 def test_empty_login(page, logger):
 
     orange=Orange_Page(page)
@@ -49,6 +50,7 @@ def test_empty_login(page, logger):
 
     logger.info("Empty Login test passed")
 
+@pytest.mark.regression
 def test_login_logout(page,logger):
     
     orange=Orange_Page(page)
@@ -57,17 +59,16 @@ def test_login_logout(page,logger):
     orange.logout()
 
     assert page.url.endswith("/login")
+
     logger.info("Login Logout Test Passed")
 
-def test_session_persistence(page, logger):
-    orange=Orange_Page(page)
-    orange.login("Admin", "admin123")
+@pytest.mark.regression
+def test_session_persistence(logged_in_page, page, logger):
 
     page.reload()
-
-    assert page.url.endswith("/dashboard/index")  
     page.wait_for_timeout(3000)
 
-    assert orange.is_dashboard_visible()
+    assert page.url.endswith("/dashboard/index")  
+    assert logged_in_page.is_dashboard_visible()
 
     logger.info("Test Session persistence test passed")
