@@ -1,0 +1,2 @@
+[32mINFO    [0m root:test_first.py:47 Opening URL
+[32mINFO    [0m root:test_first.py:53 Taking screeshot
