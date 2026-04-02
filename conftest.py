@@ -28,10 +28,14 @@ def page(browser, request):
     page.close()
 
 @pytest.fixture(scope="function")
-def logged_in_page(page):
+def authenticated_user(page, logger):
+    logger.info("Starting login fixture")
     orange=Orange_Page(page)
-    orange.login("Admin1","admin123")
-    return orange
+    username = os.getenv("ORANGE_USERNAME", "Admin")
+    password = os.getenv("ORANGE_PASSWORD", "admin123")
+    orange.login(username, password)
+    yield orange
+    logger.info("Endend login fixture")
 
 @pytest.fixture(scope="session")
 def logger():

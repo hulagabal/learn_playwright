@@ -1,0 +1,5 @@
+2026-04-02 15:01:19,887 - INFO - Valid Login test passed
+2026-04-02 15:01:35,458 - INFO - Invalid Login test passed
+2026-04-02 15:01:49,477 - INFO - Empty Login test passed
+2026-04-02 15:02:08,173 - INFO - Login Logout Test Passed
+2026-04-02 15:02:30,560 - INFO - Test Session persistence test passed

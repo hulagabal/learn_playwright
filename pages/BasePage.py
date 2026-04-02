@@ -9,14 +9,11 @@ class base_page:
     def open(self, url):
         self.page.goto(url)
 
-
     def fill_by_role(self, role, name, text):
         self.page.get_by_role(role, name=name).fill(text)
 
-
     def fill_by_placeholder(self, name, text):
         self.page.get_by_placeholder(name).fill(text)    
-
 
     def get_Title(self):
         return self.page.title()

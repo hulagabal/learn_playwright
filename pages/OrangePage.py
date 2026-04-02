@@ -13,13 +13,13 @@ class Orange_Page(base_page):
         super().__init__(page)
 
     def enter_username(self, username):
-        self.page.locator('input[name="username"]').fill(username)
+        self.page.locator(self.USERNAME).fill(username)
 
     def enter_password(self, password):
-        self.page.locator('input[name="password"]').fill(password)
+        self.page.locator(self.PASSWORD).fill(password)
 
     def click_login(self):
-        self.page.locator("button[type='submit']").click()
+        self.page.locator(self.LOGIN_BUTTON).click()
         self.page.wait_for_timeout(3000)
 
     def is_dashboard_visible(self):
@@ -52,3 +52,6 @@ class Orange_Page(base_page):
     def logout(self):
         self.click_by_locator(self.USER_DROPDOWN)    
         self.click_by_role("menuitem", name="Logout")
+        
+    def is_login_button_visible(self):
+        return self.page.locator(self.LOGIN_BUTTON).is_visible()    
