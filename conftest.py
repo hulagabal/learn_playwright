@@ -12,7 +12,7 @@ def browser():
         browser = p.chromium.launch(headless=False,slow_mo=1000) 
         
         yield browser
-        # browser.close()
+        browser.close()
 
 
 def pytest_addoption(parser):
@@ -41,14 +41,17 @@ def authenticated_user(page, logger):
 def logger():
 
     time_stamp = get_datestamp()
-    os.makedirs("logs", exist_ok=True)
+    folder_path=os.path.join("reports", "logs")
+    if os.path.exists(folder_path) and not os.path.isdir(folder_path):
+        os.remove(folder_path)
+    os.makedirs(folder_path, exist_ok=True)
 
     logger = logging.getLogger()
     logger.setLevel(logging.INFO)
 
     formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
-
-    file_handler = logging.FileHandler(f"logs/test_{time_stamp}.log")
+    file_path = os.path.join(folder_path, f"test_{time_stamp}.log")
+    file_handler = logging.FileHandler(file_path)
     file_handler.setFormatter(formatter)
 
     console_handler = logging.StreamHandler()
