@@ -23,7 +23,9 @@ class Orange_Page(base_page):
         self.page.wait_for_timeout(3000)
 
     def is_dashboard_visible(self):
-        return self.page.get_by_role("heading", name="Dashboard").is_visible()
+        locator = self.page.locator("//h6[text()='Dashboard']")
+        locator.wait_for(state="visible", timeout=5000)
+        return locator.is_visible()
     
     def login(self, username, password):
         self.fill_by_locator(self.USERNAME, username)
