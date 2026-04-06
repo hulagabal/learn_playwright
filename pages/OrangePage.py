@@ -22,38 +22,31 @@ class Orange_Page(base_page):
         self.page.locator(self.LOGIN_BUTTON).click()
         self.page.wait_for_timeout(3000)
 
-    def is_dashboard_visible(self):
-        locator = self.page.locator("//h6[text()='Dashboard']")
-        locator.wait_for(state="visible", timeout=5000)
-        return locator.is_visible()
-    
+    def get_dashboard(self):
+        return self.page.locator("//h6[text()='Dashboard']")
+            
     def login(self, username, password):
         self.fill_by_locator(self.USERNAME, username)
         self.fill_by_locator(self.PASSWORD, password)
         self.click_by_locator(self.LOGIN_BUTTON)
         self.page.wait_for_timeout(3000)
 
-
-    def get_error_message(self):
+    def get_error_message_text(self):
         return self.page.locator(self.ERROR_MESSAGE).text_content()
 
-    def is_error_visible(self):
-        error_message=self.page.locator(self.ERROR_MESSAGE)
-        error_message.wait_for(state="visible")
-        return error_message.is_visible()
+    def get_error_message(self):
+        return self.page.locator(self.ERROR_MESSAGE)
     
-
     def required_error_count(self):
         return self.page.locator(self.REQUIRED_ERROR).count()
-    
 
-    def is_required_error_visible(self):
+    def get_required_error_message(self):
         self.page.wait_for_timeout(1000)
-        return self.page.locator(self.REQUIRED_ERROR).first.is_visible()
+        return self.page.locator(self.REQUIRED_ERROR).first
 
     def logout(self):
         self.click_by_locator(self.USER_DROPDOWN)    
         self.click_by_role("menuitem", name="Logout")
         
-    def is_login_button_visible(self):
-        return self.page.locator(self.LOGIN_BUTTON).is_visible()    
+    def get_login_button(self):
+        return self.page.locator(self.LOGIN_BUTTON)

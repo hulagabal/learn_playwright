@@ -1,7 +1,8 @@
-
+import re
 import pytest
 from pages.OrangePage import Orange_Page
 import pytest_check as check
+from playwright.sync_api import expect
 
 @pytest.mark.smoke
 @pytest.mark.critical
@@ -9,11 +10,10 @@ import pytest_check as check
 @pytest.mark.ui
 def test_valid_login(authenticated_user,page, logger):
 
-    assert page.url.endswith("/dashboard/index")
-    assert authenticated_user.is_dashboard_visible()
+    expect(page).to_have_url(re.compile(r"/dashboard/index$"))
+    expect(authenticated_user.get_dashboard()).to_be_visible()
 
     # check.is_true("dashboard" in page.url.lower())
-    # check.is_true(orangePage.is_dashboard_visible())
     
     logger.info("Valid Login test passed")
 
@@ -23,9 +23,8 @@ def test_invalid_login(page,logger):
     orange=Orange_Page(page)
     orange.login("Admin","Admin")
 
-    assert page.url.endswith("/login")
-    assert orange.is_error_visible()
-    assert "Invalid credentials" in orange.get_error_message()
+    expect(orange.get_error_message()).to_be_visible()
+    expect(orange.get_error_message()).to_contain_text("Invalid credentials")
 
     logger.info("Invalid Login test passed")
 
@@ -35,29 +34,28 @@ def test_empty_login(page, logger):
     orange=Orange_Page(page)
     orange.click_login()        
     
-    assert page.url.endswith("login")
-    assert orange.is_required_error_visible()
-    assert orange.required_error_count() >= 1
-
+    expect(page).to_have_url(re.compile(r"/login$"))
+    expect(orange.get_required_error_message()).to_be_visible()
+    expect(orange.get_required_error_message()).to_have_text("Required")
     logger.info("Empty Login test passed")
 
 @pytest.mark.regression
 def test_login_logout(authenticated_user,page,logger):
    
    authenticated_user.logout()
-
-   assert page.url.endswith("/login")
-   assert authenticated_user.is_login_button_visible()
-
+   expect(page).to_have_url(re.compile(r"/login$"))
+   expect(authenticated_user.get_login_button()).to_be_visible()
    logger.info("Login Logout Test Passed")
 
 @pytest.mark.regression
 def test_session_persistence(authenticated_user, page, logger):
 
+    expect(page).to_have_url(re.compile(r"/dashboard/index$"))
+    logger.info("Dashboard loaded after login")
+
     page.reload()
     page.wait_for_timeout(3000)
 
-    assert page.url.endswith("/dashboard/index")  
-    assert authenticated_user.is_dashboard_visible()
-
+    expect(page).to_have_url(re.compile(r"/dashboard/index$"))
+    expect(authenticated_user.get_dashboard()).to_be_visible()
     logger.info("Test Session persistence test passed")
