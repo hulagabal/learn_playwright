@@ -13,24 +13,31 @@ def browser():
         yield browser
         browser.close()
 
+@pytest.fixture(scope="function")
+def context(browser):
+    context = browser.new_context()
+    yield context
+    context.close()
+
 def pytest_addoption(parser):
-    parser.addini("base_url", "Base URL for tests")
+    parser.addini("BASE_URL", "Base URL for tests")
+    parser.addini("USERNAME", "Username for login")
+    parser.addini("PASSWORD", "Password for login")
 
 @pytest.fixture(scope="function")
-def page(browser, request):
-    base_url=request.config.getini("base_url")
-    context = browser.new_context()
+def page(context, request):
+    base_url=request.config.getini("BASE_URL")
     page = context.new_page()
     page.goto(base_url)
     yield page
     page.close()
 
 @pytest.fixture(scope="function")
-def authenticated_user(page, logger):
+def authenticated_user(page, logger, request):
     logger.info("Starting login fixture")
     orange=Orange_Page(page)
-    username = os.getenv("ORANGE_USERNAME", "Admin")
-    password = os.getenv("ORANGE_PASSWORD", "admin123")
+    username = request.config.getini("USERNAME")
+    password = request.config.getini("PASSWORD")
     orange.login(username, password)
     yield orange
     logger.info("Endend login fixture")
@@ -76,3 +83,5 @@ def pytest_runtest_makereport(item, call):
             file_name = f"{test_name}_{report.when}_{timestamp}.png"
             full_path = os.path.join(folder_path, file_name)
             page.screenshot(path=full_path)
+
+           

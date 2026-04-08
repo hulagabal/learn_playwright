@@ -12,7 +12,7 @@ class DashboardPage(base_page):
         "Maintenance", "Claim"]
     
     SEARCH_INPUT = "input[placeholder='Search']"
-    TEST_WIDGETS = "//div [@class='orangehrm-dashboard-widget-name']/p"
+    TEXT_WIDGETS = "//div [@class='orangehrm-dashboard-widget-name']/p"
     UPGRADE_BUTTON = "//button[contains(@class, 'orangehrm-upgrade-button')]"
     USER_DROPDOWN_TAB = "//span[contains(@class,'oxd-userdropdown-tab')]"
     HELP_ICON = "//i[contains(@class,'oxd-icon bi-question-lg')]"
@@ -31,6 +31,7 @@ class DashboardPage(base_page):
         self.pim_widget = self.page.locator(self.PIM_MAIN_MENU_ITEM)
         self.admin_widget = self.page.locator(self.ADMIN_MAIN_MENU_ITEM)
         self.main_menu_button = self.page.locator(self.MAIN_MENU_BUTTON)
+        self.text_widgets = self.page.locator(self.TEXT_WIDGETS)
 
     def search_textfield(self):
         return self.search_textfield
@@ -47,7 +48,7 @@ class DashboardPage(base_page):
         )
     
     def get_text_of_widgets(self):
-        return self.page.locator(self.TEST_WIDGETS).all_text_contents()
+        return self.text_widgets.all_text_contents()
     
     def upgrade_button(self):
         return self.page.locator(self.UPGRADE_BUTTON)
@@ -72,13 +73,11 @@ class DashboardPage(base_page):
                 self.page.locator("//a[contains(@class,'oxd-userdropdown-link')]").all_text_contents()]
     
     def click_main_menu_button(self):
-        button=self.page.locator(self.MAIN_MENU_BUTTON)
-        button.click()
+        self.main_menu_button.click()    
     
     def main_menu_pim_items_toggled(self):
             return self.page.locator(self.PIM_MAIN_MENU_ITEM)
             
-    
     def get_main_menu_locator(self, name):
         return self.page.locator(
             f"//span[contains(@class,'oxd-main-menu-item--name') and normalize-space()='{name}']"
