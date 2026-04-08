@@ -10,10 +10,8 @@ from utils.utils import get_datestamp
 def browser():
     with sync_playwright() as p:   
         browser = p.chromium.launch(headless=False,slow_mo=1000) 
-        
         yield browser
         browser.close()
-
 
 def pytest_addoption(parser):
     parser.addini("base_url", "Base URL for tests")
