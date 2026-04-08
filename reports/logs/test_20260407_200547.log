@@ -1,0 +1,12 @@
+2026-04-07 20:05:53,491 - INFO - Starting login fixture
+2026-04-07 20:05:59,629 - INFO - Valid Login test passed
+2026-04-07 20:05:59,630 - INFO - Endend login fixture
+2026-04-07 20:06:11,316 - INFO - Invalid Login test passed
+2026-04-07 20:06:24,138 - INFO - Empty Login test passed
+2026-04-07 20:06:28,919 - INFO - Starting login fixture
+2026-04-07 20:06:37,885 - INFO - Login Logout Test Passed
+2026-04-07 20:06:37,885 - INFO - Endend login fixture
+2026-04-07 20:06:42,587 - INFO - Starting login fixture
+2026-04-07 20:06:48,721 - INFO - Dashboard loaded after login
+2026-04-07 20:06:53,589 - INFO - Test Session persistence test passed
+2026-04-07 20:06:53,589 - INFO - Endend login fixture

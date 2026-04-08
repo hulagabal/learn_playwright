@@ -1,0 +1,27 @@
+2026-04-06 20:11:37,889 - INFO - Starting login fixture
+2026-04-06 20:11:45,109 - INFO - Orange HRM dashboard is visible after login.
+2026-04-06 20:11:45,125 - INFO - Dashboard header elements are visible.
+2026-04-06 20:11:47,168 - INFO - Search works as expected.
+2026-04-06 20:11:47,222 - INFO - All menu items are visible on the dashboard.
+2026-04-06 20:11:47,223 - INFO - Endend login fixture
+2026-04-06 20:11:54,150 - INFO - Starting login fixture
+2026-04-06 20:12:02,509 - INFO - Main menu items hidden successfully.
+2026-04-06 20:12:03,568 - INFO - Menu expanded successfully.
+2026-04-06 20:12:03,569 - INFO - Endend login fixture
+2026-04-06 20:12:09,782 - INFO - Starting login fixture
+2026-04-06 20:12:16,966 - INFO - All dashboard widgets are displayed with correct titles.
+2026-04-06 20:12:18,024 - INFO - All user dropdown menu items are visible.
+2026-04-06 20:12:18,029 - INFO - All user dropdown menu items have correct titles.
+2026-04-06 20:12:18,030 - INFO - Endend login fixture
+2026-04-06 20:12:25,680 - INFO - Starting login fixture
+2026-04-06 20:12:31,833 - INFO - Valid Login test passed
+2026-04-06 20:12:31,834 - INFO - Endend login fixture
+2026-04-06 20:12:45,435 - INFO - Invalid Login test passed
+2026-04-06 20:12:57,298 - INFO - Empty Login test passed
+2026-04-06 20:13:03,275 - INFO - Starting login fixture
+2026-04-06 20:13:12,361 - INFO - Login Logout Test Passed
+2026-04-06 20:13:12,362 - INFO - Endend login fixture
+2026-04-06 20:13:17,697 - INFO - Starting login fixture
+2026-04-06 20:13:23,899 - INFO - Dashboard loaded after login
+2026-04-06 20:13:28,445 - INFO - Test Session persistence test passed
+2026-04-06 20:13:28,446 - INFO - Endend login fixture

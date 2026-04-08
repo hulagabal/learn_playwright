@@ -10,7 +10,7 @@ def test_valid_Login(page):
 
 
     
-    assert page.locator("[data-qe-id='nav-main-domains']").is_visible()
-    assert page.locator("[data-qe-id='nav-main-hosting']").is_visible()
-    assert page.locator("[data-qe-id='nav-main-business']").is_visible()
+    expect(page.locator("[data-qe-id='nav-main-domains']")).to_be_visible()
+    expect(page.locator("[data-qe-id='nav-main-hosting']")).to_be_visible()
+    expect(page.locator("[data-qe-id='nav-main-business']")).to_be_visible()
     
