@@ -3,6 +3,7 @@ from playwright.sync_api import sync_playwright
 import os
 import logging
 import datetime
+from pages.DashboardPage import DashboardPage
 from pages.OrangePage import Orange_Page
 from utils.utils import get_datestamp
 
@@ -83,5 +84,3 @@ def pytest_runtest_makereport(item, call):
             file_name = f"{test_name}_{report.when}_{timestamp}.png"
             full_path = os.path.join(folder_path, file_name)
             page.screenshot(path=full_path)
-
-           

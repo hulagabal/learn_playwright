@@ -1,6 +1,3 @@
-from unicodedata import name
-
-from conftest import logger, page
 from pages.BasePage import base_page
 from playwright.sync_api import expect
 
@@ -33,7 +30,7 @@ class DashboardPage(base_page):
         self.main_menu_button = self.page.locator(self.MAIN_MENU_BUTTON)
         self.text_widgets = self.page.locator(self.TEXT_WIDGETS)
 
-    def search_textfield(self):
+    def get_search_input(self):
         return self.search_textfield
     
     def search(self, text):
@@ -42,7 +39,7 @@ class DashboardPage(base_page):
              return False
         return True
 
-    def get_main_menu_locator(self, name):
+    def get_main_menu_items(self, name):
         return self.page.locator(
             f"//span[contains(@class,'oxd-main-menu-item--name') and normalize-space()='{name}']"
         )
@@ -50,16 +47,16 @@ class DashboardPage(base_page):
     def get_text_of_widgets(self):
         return self.text_widgets.all_text_contents()
     
-    def upgrade_button(self):
+    def get_upgrade_button(self):
         return self.page.locator(self.UPGRADE_BUTTON)
     
-    def help_icon(self):
+    def get_help_icon(self):
         return self.page.locator(self.HELP_ICON)
     
-    def brand_logo(self):
+    def get_brand_logo(self):
         return self.page.locator(self.BRAND_LOGO)
         
-    def user_dropdown(self):
+    def get_user_dropdown(self):
         return self.user_dropdown_tab_locator
 
     def click_user_dropdown(self):
@@ -77,8 +74,3 @@ class DashboardPage(base_page):
     
     def main_menu_pim_items_toggled(self):
             return self.page.locator(self.PIM_MAIN_MENU_ITEM)
-            
-    def get_main_menu_locator(self, name):
-        return self.page.locator(
-            f"//span[contains(@class,'oxd-main-menu-item--name') and normalize-space()='{name}']"
-        )
