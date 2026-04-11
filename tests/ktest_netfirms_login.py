@@ -1,6 +1,6 @@
 
 from playwright.sync_api import expect
-from pages.NetfirmsLoginPage import Netfirms_Login_page
+from pages.netfirms_login_page import Netfirms_Login_page
 
 def test_valid_Login(page):
     netfirms_login_page = Netfirms_Login_page(page)

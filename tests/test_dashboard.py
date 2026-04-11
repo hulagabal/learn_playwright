@@ -1,7 +1,7 @@
 import re
 
 import pytest
-from pages.DashboardPage import DashboardPage
+from pages.dashboard_page import DashboardPage
 from playwright.sync_api import expect
 
 

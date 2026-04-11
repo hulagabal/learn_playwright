@@ -1,5 +1,5 @@
 
-from pages.BasePage import base_page
+from pages.base_page import base_page
 
 class Netfirms_Login_page(base_page):
     

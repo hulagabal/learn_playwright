@@ -1,4 +1,4 @@
-from pages.BasePage import base_page
+from pages.base_page import base_page
 from playwright.sync_api import expect
 
 class DashboardPage(base_page):

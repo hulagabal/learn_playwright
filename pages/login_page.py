@@ -1,4 +1,4 @@
-from pages.BasePage import base_page
+from pages.base_page import base_page
 
 class Orange_Page(base_page):
     USERNAME= 'input[name="username"]'

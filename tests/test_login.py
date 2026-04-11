@@ -1,6 +1,6 @@
 import re
 import pytest
-from pages.OrangeLoginPage import Orange_Page
+from pages.login_page import Orange_Page
 import pytest_check as check
 from playwright.sync_api import expect
 

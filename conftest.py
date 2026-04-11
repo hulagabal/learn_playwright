@@ -3,8 +3,8 @@ from playwright.sync_api import expect, sync_playwright
 import os
 import logging
 import datetime
-from pages.DashboardPage import DashboardPage
-from pages.OrangeLoginPage import Orange_Page
+from pages.dashboard_page import DashboardPage
+from pages.login_page import Orange_Page
 from utils.utils import get_datestamp
 
 @pytest.fixture(scope="session")
