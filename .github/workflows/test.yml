@@ -27,3 +27,10 @@ jobs:
 
       - name: Run tests
         run: pytest -v --tb=long || true
+      
+      - name: Always show result files
+        if: always()
+        run: |
+          echo "==== DEBUG OUTPUT ===="
+          pwd
+          ls -R  
