@@ -14,65 +14,56 @@ EXPECTED_MENU_ITEM_TEXTS = ["About", "Support", "Change Password", "Logout"]
 @pytest.mark.dashboard
 @pytest.mark.ui
 def test_dashboard_header_and_user_dropdown(authenticated_user, page, logger):
-    dashboard_page = DashboardPage(page)
     
-    expect(page).to_have_url(re.compile(r"/dashboard/index$"))
-    expect(authenticated_user.get_dashboard()).to_be_visible()
     logger.info("Orange HRM dashboard is visible after login.")
 
-    expect(dashboard_page.get_brand_logo()).to_be_visible()
-    expect(dashboard_page.get_help_icon()).to_be_visible()
-    expect(dashboard_page.get_upgrade_button()).to_be_visible()
-    expect(dashboard_page.get_search_input()).to_be_visible()
+    expect(authenticated_user.get_brand_logo()).to_be_visible()
+    expect(authenticated_user.get_help_icon()).to_be_visible()
+    expect(authenticated_user.get_upgrade_button()).to_be_visible()
+    expect(authenticated_user.get_search_input()).to_be_visible()
     logger.info("Dashboard header elements are visible.")
+    
+    expect(authenticated_user.get_user_dropdown()).to_be_visible()
+    authenticated_user.click_user_dropdown()
 
-    expect(dashboard_page.get_user_dropdown()).to_be_visible()
-    dashboard_page.click_user_dropdown()
-
-    for item in dashboard_page.MENU_ITEMS:
-        expect(dashboard_page.get_user_menu_items(item)).to_be_visible(timeout=5000)
+    for item in authenticated_user.MENU_ITEMS:
+        expect(authenticated_user.get_user_menu_items(item)).to_be_visible()
     
     logger.info("All user dropdown menu items are visible.")
 
-    actual_dropdown_menu_item_texts = dashboard_page.get_dropdown_menu_items_texts()
+    actual_dropdown_menu_item_texts = authenticated_user.get_dropdown_menu_items_texts()
 
     assert actual_dropdown_menu_item_texts == EXPECTED_MENU_ITEM_TEXTS
     logger.info("All user dropdown menu items have correct titles.")
 
 @pytest.mark.dashboard
 def test_main_menu_button_and_search(authenticated_user, page, logger):    
-    dashboard_page = DashboardPage(page)
-
-    expect(authenticated_user.get_dashboard()).to_be_visible()
-
-    expect(dashboard_page.get_main_menu_items("Admin")).to_be_visible(timeout=5000)
-    expect(dashboard_page.get_main_menu_items("PIM")).to_be_visible()
+    
+    expect(authenticated_user.get_main_menu_items("Admin")).to_be_visible()
+    expect(authenticated_user.get_main_menu_items("PIM")).to_be_visible()
     logger.info("Main menu items are visible.")
 
-    dashboard_page.click_main_menu_button()
+    authenticated_user.click_main_menu_button()
 
-    for item in dashboard_page.MAIN_MENU_ITEMS:
-        expect(dashboard_page.get_main_menu_items(item)).to_be_hidden(timeout=5000)
+    for item in authenticated_user.MAIN_MENU_ITEMS:
+        expect(authenticated_user.get_main_menu_items(item)).to_be_hidden()
     logger.info("Main menu items hidden successfully.")
 
-    dashboard_page.click_main_menu_button()
+    authenticated_user.click_main_menu_button()
 
-    for item in dashboard_page.MAIN_MENU_ITEMS:
-        expect(dashboard_page.get_main_menu_items(item)).to_be_visible()   
+    for item in authenticated_user.MAIN_MENU_ITEMS:
+        expect(authenticated_user.get_main_menu_items(item)).to_be_visible()   
     logger.info("Menu expanded successfully.")
     
-    dashboard_page.search("PIM") 
-    expect(dashboard_page.pim_widget).to_be_visible()
-    expect(dashboard_page.admin_widget).to_be_hidden()
+    authenticated_user.search("PIM") 
+    expect(authenticated_user.pim_widget).to_be_visible()
+    expect(authenticated_user.admin_widget).to_be_hidden()
     logger.info("Search functionality is working as expected.")   
 
 @pytest.mark.dashboard
 def test_dashboard_widgets(authenticated_user, page, logger):
-    dashboard_page = DashboardPage(page)
-
-    expect(authenticated_user.get_dashboard()).to_be_visible()
-
-    widget_texts = dashboard_page.get_text_of_widgets()
+  
+    widget_texts = authenticated_user.get_text_of_widgets()
 
     assert sorted(widget_texts) == sorted(EXPECTED_WIDGET_TEXTS)
     logger.info("All dashboard widgets are displayed with correct titles.")

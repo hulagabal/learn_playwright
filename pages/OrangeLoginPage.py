@@ -6,8 +6,7 @@ class Orange_Page(base_page):
     LOGIN_BUTTON= "button[type='submit']"
     ERROR_MESSAGE = "p.oxd-alert-content-text"
     REQUIRED_ERROR = "text=Required"
-    USER_DROPDOWN = ".oxd-userdropdown-tab"
-    USER_LOGOUT = "a[name='Logout']"
+    
 
     def __init__(self, page):
         super().__init__(page)
@@ -21,9 +20,6 @@ class Orange_Page(base_page):
     def click_login(self):
         self.page.locator(self.LOGIN_BUTTON).click()
         self.page.wait_for_timeout(3000)
-
-    def get_dashboard(self):
-        return self.page.locator("//h6[text()='Dashboard']")
             
     def login(self, username, password):
         self.fill_by_locator(self.USERNAME, username)
@@ -43,10 +39,6 @@ class Orange_Page(base_page):
     def get_required_error_message(self):
         self.page.wait_for_timeout(1000)
         return self.page.locator(self.REQUIRED_ERROR).first
-
-    def logout(self):
-        self.click_by_locator(self.USER_DROPDOWN)    
-        self.click_by_role("menuitem", name="Logout")
-        
+    
     def get_login_button(self):
         return self.page.locator(self.LOGIN_BUTTON)

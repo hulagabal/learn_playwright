@@ -1,6 +1,6 @@
 import re
 import pytest
-from pages.OrangePage import Orange_Page
+from pages.OrangeLoginPage import Orange_Page
 import pytest_check as check
 from playwright.sync_api import expect
 
@@ -44,7 +44,8 @@ def test_login_logout(authenticated_user,page,logger):
    
    authenticated_user.logout()
    expect(page).to_have_url(re.compile(r"/login$"))
-   expect(authenticated_user.get_login_button()).to_be_visible()
+   orange=Orange_Page(page)
+   expect(orange.get_login_button()).to_be_visible()
    logger.info("Login Logout Test Passed")
 
 @pytest.mark.regression

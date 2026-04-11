@@ -1,16 +1,16 @@
 import pytest
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import expect, sync_playwright
 import os
 import logging
 import datetime
 from pages.DashboardPage import DashboardPage
-from pages.OrangePage import Orange_Page
+from pages.OrangeLoginPage import Orange_Page
 from utils.utils import get_datestamp
 
 @pytest.fixture(scope="session")
 def browser():
-    with sync_playwright() as p:   
-        browser = p.chromium.launch(headless=False,slow_mo=1000) 
+    with sync_playwright() as playwright:   
+        browser = playwright.firefox.launch(headless=False,slow_mo=1000) 
         yield browser
         browser.close()
 
@@ -40,8 +40,11 @@ def authenticated_user(page, logger, request):
     username = request.config.getini("USERNAME")
     password = request.config.getini("PASSWORD")
     orange.login(username, password)
-    yield orange
-    logger.info("Endend login fixture")
+    dashboard_page=DashboardPage(page)
+    expect(dashboard_page.get_dashboard()).to_be_visible()
+    logger.info("Login successful, dashboard is visible.")
+    yield dashboard_page
+    logger.info("Ending login fixture")
 
 @pytest.fixture(scope="session")
 def logger():

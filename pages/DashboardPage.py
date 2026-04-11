@@ -17,6 +17,8 @@ class DashboardPage(base_page):
     PIM_MAIN_MENU_ITEM = "//a[@class='oxd-main-menu-item']/span[text()= 'PIM']"
     ADMIN_MAIN_MENU_ITEM = "//a[@class='oxd-main-menu-item']/span[text()= 'Admin']"
     MAIN_MENU_BUTTON = "//button[@class='oxd-icon-button oxd-main-menu-button']"
+    USER_DROPDOWN = ".oxd-userdropdown-tab"
+    USER_LOGOUT = "a[name='Logout']"
 
     MENU_ITEMS = [ "About", "Support", "Change Password", "Logout"]
 
@@ -30,6 +32,9 @@ class DashboardPage(base_page):
         self.main_menu_button = self.page.locator(self.MAIN_MENU_BUTTON)
         self.text_widgets = self.page.locator(self.TEXT_WIDGETS)
 
+    def get_dashboard(self):
+        return self.page.locator("//h6[text()='Dashboard']")
+    
     def get_search_input(self):
         return self.search_textfield
     
@@ -74,3 +79,7 @@ class DashboardPage(base_page):
     
     def main_menu_pim_items_toggled(self):
             return self.page.locator(self.PIM_MAIN_MENU_ITEM)
+    
+    def logout(self):
+        self.click_by_locator(self.USER_DROPDOWN)    
+        self.click_by_role("menuitem", name="Logout")
