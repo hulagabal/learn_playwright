@@ -1,10 +1,10 @@
 class base_page:
 
     def __init__(self, page):
-        self.page= page
+        self.page = page
 
     def wait_for_url(self, url):
-        self.page.wait_for_url(url)    
+        self.page.wait_for_url(url)
 
     def open(self, url):
         self.page.goto(url)
@@ -13,14 +13,14 @@ class base_page:
         self.page.get_by_role(role, name=name).fill(text)
 
     def fill_by_placeholder(self, name, text):
-        self.page.get_by_placeholder(name).fill(text)    
+        self.page.get_by_placeholder(name).fill(text)
 
     def get_Title(self):
         return self.page.title()
-    
+
     def check_visible(self, locator):
         return self.page.locator(locator).is_visible()
-    
+
     def click_by_locator(self, locator):
         self.page.locator(locator).click()
 
@@ -28,4 +28,4 @@ class base_page:
         self.page.locator(locator).fill(text)
 
     def click_by_role(self, role, name):
-        self.page.get_by_role(role, name=name).click()            
+        self.page.get_by_role(role, name=name).click()

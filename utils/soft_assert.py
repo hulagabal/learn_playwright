@@ -22,9 +22,7 @@ class SoftAssert:
 
     def assert_in(self, item, container, message="Item not found"):
         if item not in container:
-            self.errors.append(
-                f"[IN FAILED] {message} | '{item}' not in '{container}'"
-            )
+            self.errors.append(f"[IN FAILED] {message} | '{item}' not in '{container}'")
 
     # -------------------------------
     # PLAYWRIGHT HELPERS
@@ -42,9 +40,7 @@ class SoftAssert:
 
     def assert_url_contains(self, page, text, message="URL mismatch"):
         if text not in page.url.lower():
-            self.errors.append(
-                f"[URL FAILED] {message} | URL: {page.url}"
-            )
+            self.errors.append(f"[URL FAILED] {message} | URL: {page.url}")
 
     # -------------------------------
     # FINAL ASSERT
