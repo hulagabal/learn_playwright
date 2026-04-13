@@ -7,6 +7,7 @@ from playwright.sync_api import expect, sync_playwright
 
 from pages.dashboard_page import DashboardPage
 from pages.login_page import Orange_Page
+from utils.data_loader import get_user
 from utils.utils import get_datestamp
 
 
@@ -27,8 +28,6 @@ def context(browser):
 
 def pytest_addoption(parser):
     parser.addini("BASE_URL", "Base URL for tests")
-    parser.addini("USERNAME", "Username for login")
-    parser.addini("PASSWORD", "Password for login")
 
 
 @pytest.fixture(scope="function")
@@ -44,8 +43,11 @@ def page(context, request):
 def authenticated_user(page, logger, request):
     logger.info("Starting login fixture")
     orange = Orange_Page(page)
-    username = request.config.getini("USERNAME")
-    password = request.config.getini("PASSWORD")
+
+    user = get_user("valid_user")
+    username = user["username"]
+    password = user["password"]
+
     orange.login(username, password)
     dashboard_page = DashboardPage(page)
     expect(dashboard_page.get_dashboard()).to_be_visible()

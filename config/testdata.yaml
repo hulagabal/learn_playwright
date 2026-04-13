@@ -1,6 +1,6 @@
 # testdata.yaml
 users:
-  admin:
+  valid_user:
     username: Admin
     password: admin123
   invalid_user:
