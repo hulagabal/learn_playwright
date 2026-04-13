@@ -24,6 +24,7 @@ class Orange_Page(base_page):
     def login(self, username, password):
         self.fill_by_locator(self.USERNAME, username)
         self.fill_by_locator(self.PASSWORD, password)
+        
         self.click_by_locator(self.LOGIN_BUTTON)
         self.page.wait_for_timeout(3000)
 

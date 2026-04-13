@@ -10,11 +10,14 @@ from pages.login_page import Orange_Page
 from utils.data_loader import get_user
 from utils.utils import get_datestamp
 
+@pytest.fixture(scope="session")
+def playwright_instance():
+    with sync_playwright() as playwright:
+        yield playwright
 
 @pytest.fixture(scope="session")
-def browser():
-    with sync_playwright() as playwright:
-        browser = playwright.firefox.launch(headless=False, slow_mo=1000)
+def browser(playwright_instance):
+        browser = playwright_instance.firefox.launch(headless=False, slow_mo=1000)
         yield browser
         browser.close()
 
@@ -97,3 +100,21 @@ def pytest_runtest_makereport(item, call):
             file_name = f"{test_name}_{report.when}_{timestamp}.png"
             full_path = os.path.join(folder_path, file_name)
             page.screenshot(path=full_path)
+
+
+def pytest_configure(config):
+    reports_dir = "reports/history"
+    os.makedirs(reports_dir, exist_ok=True)
+
+    # Dynamic values (can come from env/CI)
+    project = os.getenv("PROJECT", "orangehrm")
+    env = os.getenv("ENV", "qa")
+    build = os.getenv("BUILD_NUMBER", "local")
+
+    # Timestamp
+    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+
+    # Final filename
+    filename = f"{reports_dir}/report_{project}_{env}_build{build}_{timestamp}.html"
+
+    config.option.htmlpath = filename
