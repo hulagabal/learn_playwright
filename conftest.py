@@ -1,25 +1,26 @@
-import datetime
-import logging
 import os
+from datetime import datetime
 
 import pytest
 from playwright.sync_api import expect, sync_playwright
 
+from logger import get_logger
 from pages.dashboard_page import DashboardPage
 from pages.login_page import Orange_Page
+from report import HtmlReport
 from utils.data_loader import get_user
-from utils.utils import get_datestamp
 
 @pytest.fixture(scope="session")
 def playwright_instance():
     with sync_playwright() as playwright:
         yield playwright
 
+
 @pytest.fixture(scope="session")
 def browser(playwright_instance):
-        browser = playwright_instance.firefox.launch(headless=False, slow_mo=1000)
-        yield browser
-        browser.close()
+    browser = playwright_instance.firefox.launch(headless=False, slow_mo=1000)
+    yield browser
+    browser.close()
 
 
 @pytest.fixture(scope="function")
@@ -43,8 +44,8 @@ def page(context, request):
 
 
 @pytest.fixture(scope="function")
-def authenticated_user(page, logger, request):
-    logger.info("Starting login fixture")
+def authenticated_user(page, request):
+    
     orange = Orange_Page(page)
 
     user = get_user("valid_user")
@@ -54,67 +55,111 @@ def authenticated_user(page, logger, request):
     orange.login(username, password)
     dashboard_page = DashboardPage(page)
     expect(dashboard_page.get_dashboard()).to_be_visible()
-    logger.info("Login successful, dashboard is visible.")
     yield dashboard_page
-    logger.info("Ending login fixture")
+    
+# global objects
+html_report = None
+logger = get_logger()
+
+SCREENSHOT_DIR = "reports/screenshots"
+REPORT_DIR = "reports"
+
+os.makedirs(SCREENSHOT_DIR, exist_ok=True)
+os.makedirs(REPORT_DIR, exist_ok=True)
 
 
-@pytest.fixture(scope="session")
-def logger():
+# 🚀 SESSION START
+def pytest_sessionstart(session):
+    global html_report
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    report_path = os.path.join(REPORT_DIR, f"report_{timestamp}.html")
+    html_report = HtmlReport(report_path)
 
-    time_stamp = get_datestamp()
-    folder_path = os.path.join("reports", "logs")
-    if os.path.exists(folder_path) and not os.path.isdir(folder_path):
-        os.remove(folder_path)
-    os.makedirs(folder_path, exist_ok=True)
-
-    logger = logging.getLogger()
-    logger.setLevel(logging.INFO)
-
-    formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
-    file_path = os.path.join(folder_path, f"test_{time_stamp}.log")
-    file_handler = logging.FileHandler(file_path)
-    file_handler.setFormatter(formatter)
-
-    console_handler = logging.StreamHandler()
-    console_handler.setFormatter(formatter)
-
-    logger.addHandler(file_handler)
-    logger.addHandler(console_handler)
-
-    return logger
+    logger.info("=== Test Session Started ===")
 
 
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):
     outcome = yield
-    report = outcome.get_result()
+    rep = outcome.get_result()
+    # Screenshots must attach here; pytest-rerunfailures sets outcome to "rerun" later.
+    if rep.when != "call" or not rep.failed:
+        return
+    funcargs = getattr(item, "funcargs", None) or {}
+    page = funcargs.get("page")
+    if not page:
+        return
+    filename = f"{item.name}.png"
+    abs_path = os.path.join(SCREENSHOT_DIR, filename)
+    rel_path = f"screenshots/{filename}"
+    page.screenshot(path=abs_path)
+    setattr(rep, "_custom_screenshot_rel", rel_path)
 
-    if report.when == "call" and report.failed:
-        page = item.funcargs.get("page", None)
-        if page:
-            folder_path = os.path.join("reports", "screenshots")
-            os.makedirs(folder_path, exist_ok=True)
-            test_name = item.name
-            timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-            file_name = f"{test_name}_{report.when}_{timestamp}.png"
-            full_path = os.path.join(folder_path, file_name)
-            page.screenshot(path=full_path)
+
+def pytest_runtest_logreport(report):
+    global html_report
+    if html_report is None:
+        return
+
+    when = report.when
+    oc = getattr(report, "outcome", None)
+
+    if when == "call":
+        pass
+    elif when == "setup" and oc == "skipped":
+        pass
+    elif when == "setup" and oc == "failed":
+        pass
+    elif when == "teardown" and oc == "failed":
+        pass
+    else:
+        return
+
+    test_name = report.nodeid
+    duration = getattr(report, "duration", 0) or 0
+
+    if oc == "rerun":
+        status = "RERUN"
+        message = (
+            str(report.longrepr).strip()
+            if report.longrepr
+            else "Failed — scheduled for retry"
+        )
+    elif oc == "passed":
+        status = "PASSED"
+        message = "Test executed successfully"
+    elif oc == "failed":
+        if when == "setup":
+            status = "SETUP ERROR"
+        elif when == "teardown":
+            status = "TEARDOWN ERROR"
+        else:
+            status = "FAILED"
+        message = (
+            report.longreprtext.strip()
+            if getattr(report, "longreprtext", None)
+            else (str(report.longrepr) if report.longrepr else "Test failed")
+        )
+    elif oc == "skipped":
+        status = "SKIPPED"
+        message = (
+            report.longreprtext.strip()
+            if getattr(report, "longreprtext", None)
+            else "Test skipped"
+        )
+    else:
+        return
+
+    screenshot_path = getattr(report, "_custom_screenshot_rel", None)
+
+    html_report.add_result(test_name, duration, status, message, screenshot_path)
+    logger.info(f"{test_name} - {status}")
+    if oc == "failed":
+        logger.error(message)
 
 
-def pytest_configure(config):
-    reports_dir = "reports/history"
-    os.makedirs(reports_dir, exist_ok=True)
-
-    # Dynamic values (can come from env/CI)
-    project = os.getenv("PROJECT", "orangehrm")
-    env = os.getenv("ENV", "qa")
-    build = os.getenv("BUILD_NUMBER", "local")
-
-    # Timestamp
-    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    # Final filename
-    filename = f"{reports_dir}/report_{project}_{env}_build{build}_{timestamp}.html"
-
-    config.option.htmlpath = filename
+# 🏁 SESSION FINISH
+def pytest_sessionfinish(session, exitstatus):
+    if html_report is not None:
+        html_report.generate()
+    logger.info("=== Test Session Finished ===")

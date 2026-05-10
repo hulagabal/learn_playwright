@@ -1,5 +1,3 @@
-from playwright.sync_api import expect
-
 from pages.base_page import base_page
 
 
@@ -84,12 +82,9 @@ class DashboardPage(base_page):
         )
 
     def get_dropdown_menu_items_texts(self):
-        return [
-            text.strip()
-            for text in self.page.locator(
-                "//a[contains(@class,'oxd-userdropdown-link')]"
-            ).all_text_contents()
-        ]
+        locator = self.page.locator("//a[contains(@class,'oxd-userdropdown-link')]")
+
+        return [text.strip() for text in locator.all_text_contents()]
 
     def click_main_menu_button(self):
         self.main_menu_button.click()

@@ -22,11 +22,10 @@ class base_page:
         return self.page.locator(locator).is_visible()
 
     def click_by_locator(self, locator):
-        element=self.page.locator(locator)
+        element = self.page.locator(locator)
         element.wait_for(state="visible")
         element.wait_for(state="attached")
         element.click(timeout=10000)
-
 
     def fill_by_locator(self, locator, text):
         self.page.locator(locator).fill(text)
